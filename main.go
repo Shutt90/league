@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/KnutZuidema/golio"
 	"github.com/KnutZuidema/golio/api"
@@ -16,7 +17,16 @@ func main() {
 	client := golio.NewClient(key,
 		golio.WithRegion(api.RegionEuropeWest),
 		golio.WithLogger(logrus.New().WithField("foo", "bar")))
-	summoner, _ := client.Riot.Summoner.GetByName()
+	rotation, err := client.Riot.LoL.Champion.GetFreeRotation()
+	for _, champ := range rotation.FreeChampionIDs {
+		champStringId := strconv.Itoa(champ)
+
+		champname, _ := client.DataDragon.GetChampionByID(champStringId)
+		fmt.Printf("%v\n", champname.Name)
+
+	}
+
+	summoner, _ := client.Riot.Summoner.GetByName("Shutt90")
 	fmt.Printf("%s is a level %d summoner\n", summoner.Name, summoner.SummonerLevel)
 	champion, _ := client.DataDragon.GetChampion("Jhin")
 	mastery, err := client.Riot.ChampionMastery.Get(summoner.ID, champion.Key)
