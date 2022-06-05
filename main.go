@@ -44,9 +44,11 @@ func main() {
 		champJson, err := json.Marshal(champMap)
 		if err != nil {
 			log.Fatal("Error marshalling", err)
+			w.WriteHeader(http.StatusNotImplemented)
 		}
 
 		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
 		w.Write(champJson)
 
 	})
