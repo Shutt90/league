@@ -1,9 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
+	"net/http"
 	"os"
-	"sort"
 
 	"github.com/KnutZuidema/golio"
 	"github.com/KnutZuidema/golio/api"
@@ -23,6 +25,8 @@ func main() {
 
 	allChamps, _ := client.DataDragon.GetChampions()
 
+	champMap := make(map[string]int)
+
 	for _, champ := range allChamps {
 
 		currentChamp, err := client.Riot.LoL.ChampionMastery.Get(summoner.ID, champ.Key)
@@ -32,8 +36,21 @@ func main() {
 			continue
 		}
 
-		fmt.Printf("Champion Name: %v\n Current Mastery: %v\n", champ.ID, currentChamp.ChampionPoints)
+		champMap[champ.ID] = currentChamp.ChampionPoints
 
 	}
+
+	http.HandleFunc("/champs", func(w http.ResponseWriter, r *http.Request) {
+		champJson, err := json.Marshal(champMap)
+		if err != nil {
+			log.Fatal("Error marshalling", err)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(champJson)
+
+	})
+
+	log.Fatal(http.ListenAndServe(":8080", nil))
 
 }
