@@ -20,7 +20,10 @@ func main() {
 		golio.WithRegion(api.RegionEuropeWest),
 		golio.WithLogger(logrus.New().WithField("foo", "bar")))
 
-	summoner, _ := client.Riot.LoL.Summoner.GetByName("Shutt90")
+	summoner, err := client.Riot.LoL.Summoner.GetByName("Shutt90")
+	if err != nil {
+		log.Fatal("Error getting summoner: ", err)
+	}
 	fmt.Printf("%s is a level %d summoner\n", summoner.Name, summoner.SummonerLevel)
 
 	allChamps, _ := client.DataDragon.GetChampions()

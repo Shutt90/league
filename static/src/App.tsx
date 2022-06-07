@@ -12,15 +12,14 @@ const App: Component = () => {
   // .then(res => data = res)
   // .catch(err => console.error(err))
 
-
   return (
     <div class={styles.container}>
       <h1>Hello world</h1>
-      <Champions>
-        <Champion champion="Aatrox" mastery={7} />
-      </Champions>
+      <Champions />
     </div>
   );
+
 };
 
-return App
+
+export default App;

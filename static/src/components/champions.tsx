@@ -1,31 +1,29 @@
 import axios from 'axios';
-import { For } from 'solid-js';
-import { createSignal } from 'solid-js';
+import { createSignal, For } from 'solid-js';
+import Champion from './champion';
+const [champs, setChamps] = createSignal({'hello': 'world', 'world': 'hello'});
 
-export default async function Champion({children}) {
-    let data = {};
+async function getChamps() {
+    const res = await axios.get('http://localhost:8080/champs')
+    const data = res.data;
+    return data
 
-    try {
-        const res = await axios.get('http://localhost:8080/champs')
-        data = res.data;
-    } catch (err) {
-        console.error(err)
-    }
+}
 
-    const [champs, setChamps] = createSignal(data);
+getChamps().then(champs => setChamps(champs)).catch(err => console.error(err));
 
 
-    console.log(champs)
+export default function Champions() {
 
-    
-    
+    console.log(champs())
+
     return (
-        <div class="champions_container">
-            <For each={data}>
-            {data.map(champion =>{
-                return <Champion champion={champion} mastery={champion} />
-            })}
-        </div>
-
+        // <h1>Champion</h1>
+        <For each={champs()}>
+            {(champion, i) =>
+            <div class="champions_container">
+                <Champion champion={champion} mastery={champion} />
+            </div>}
+        </For>
     )
 }
