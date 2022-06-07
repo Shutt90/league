@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/KnutZuidema/golio"
 	"github.com/KnutZuidema/golio/api"
@@ -28,7 +29,8 @@ func main() {
 
 	allChamps, _ := client.DataDragon.GetChampions()
 
-	champMap := make(map[string]int)
+	// champMap := make(map[string]int)
+	var champArr []map[string]string
 
 	for _, champ := range allChamps {
 
@@ -39,12 +41,14 @@ func main() {
 			continue
 		}
 
-		champMap[champ.ID] = currentChamp.ChampionPoints
-
+		champArr = append(champArr, map[string]string{
+			"Champion": champ.ID,
+			"Points":   strconv.Itoa(currentChamp.ChampionPoints),
+		})
 	}
 
 	http.HandleFunc("/champs", func(w http.ResponseWriter, r *http.Request) {
-		champJson, err := json.Marshal(champMap)
+		champJson, err := json.Marshal(champArr)
 		if err != nil {
 			log.Fatal("Error marshalling", err)
 			w.WriteHeader(http.StatusNotImplemented)

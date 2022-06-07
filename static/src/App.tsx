@@ -14,7 +14,6 @@ const App: Component = () => {
 
   return (
     <div class={styles.container}>
-      <h1>Hello world</h1>
       <Champions />
     </div>
   );

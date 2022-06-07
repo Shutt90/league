@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { createSignal, For } from 'solid-js';
 import Champion from './champion';
-const [champs, setChamps] = createSignal({'hello': 'world', 'world': 'hello'});
+import styles from '../styles/champions.module.css';
+const [champs, setChamps] = createSignal([{Champion: 'Aatrox', Points: '525'}]);
 
 async function getChamps() {
     const res = await axios.get('http://localhost:8080/champs')
@@ -12,18 +13,17 @@ async function getChamps() {
 
 getChamps().then(champs => setChamps(champs)).catch(err => console.error(err));
 
-
 export default function Champions() {
-
-    console.log(champs())
-
+    setTimeout(() => console.log(champs()), 2000);
     return (
-        // <h1>Champion</h1>
-        <For each={champs()}>
-            {(champion, i) =>
-            <div class="champions_container">
-                <Champion champion={champion} mastery={champion} />
-            </div>}
-        </For>
+        <div class={styles.champions_container}>
+            <h3>Champion Mastery</h3>
+            <For each={champs()}>
+                {(champion, i) =>
+                <div class="champions_container">
+                    <Champion data-index={i} champion={champion.Champion} mastery={champion.Points} />
+                </div>}
+            </For>
+        </div>
     )
 }
