@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { createSignal, For } from 'solid-js';
-import Champion from './champion';
+import Champion from './Champion';
 import styles from '../styles/champions.module.css';
 const [champs, setChamps] = createSignal([{Champion: 'Aatrox', Points: '525'}]);
 

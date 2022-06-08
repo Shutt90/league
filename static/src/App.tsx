@@ -1,19 +1,14 @@
 import type { Component } from 'solid-js';
-import Champion from './components/champion';
-import Champions from './components/champions';
+import Champions from './components/Champions';
+import Header from './components/Header';
 
 import styles from './App.module.css';
 
 
 const App: Component = () => { 
-
-  // fetch('http://localhost:8080/champs')
-  // .then(res => res.json())
-  // .then(res => data = res)
-  // .catch(err => console.error(err))
-
   return (
     <div class={styles.container}>
+      <Header/>
       <Champions />
     </div>
   );

@@ -29,7 +29,6 @@ func main() {
 
 	allChamps, _ := client.DataDragon.GetChampions()
 
-	// champMap := make(map[string]int)
 	var champArr []map[string]string
 
 	for _, champ := range allChamps {
