@@ -7,8 +7,13 @@ export default function Header() {
     return (
         <div class={style.header}>
             <img height="150" width="auto" class="header-image" src={logo} />
-            <Nav/>
-            <Searchbar/>
+            <h1>League of Legends Mastery</h1>
+            <div class={style.rightside}>
+                <Nav/>
+                <div class={style.spacer}>
+                    <Searchbar/>
+                </div>
+            </div>
         </div>
     )
 

@@ -5,3 +5,12 @@
   background-color: #020202;
   padding: 0 2rem;
 }
+
+.right-side {
+  display: flex;
+  flex-direction: column;
+}
+
+.spacer {
+  margin-top: 2rem;
+}
