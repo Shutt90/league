@@ -23,7 +23,7 @@ func main() {
 		golio.WithRegion(api.RegionEuropeWest),
 		golio.WithLogger(logrus.New().WithField("foo", "bar")))
 
-	http.HandleFunc("/getSumm", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/getsumm", func(w http.ResponseWriter, r *http.Request) {
 		player := getSummoner(r.URL.Query().Get("summoner"), client)
 		champJson, err := json.Marshal(player)
 		if err != nil {
