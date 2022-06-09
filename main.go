@@ -14,6 +14,8 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+var champArr []map[string]string
+
 func main() {
 	godotenv.Load()
 	key := os.Getenv("API_KEY")
@@ -21,33 +23,9 @@ func main() {
 		golio.WithRegion(api.RegionEuropeWest),
 		golio.WithLogger(logrus.New().WithField("foo", "bar")))
 
-	summoner, err := client.Riot.LoL.Summoner.GetByName("Shutt90")
-	if err != nil {
-		log.Fatal("Error getting summoner: ", err)
-	}
-	fmt.Printf("%s is a level %d summoner\n", summoner.Name, summoner.SummonerLevel)
-
-	allChamps, _ := client.DataDragon.GetChampions()
-
-	var champArr []map[string]string
-
-	for _, champ := range allChamps {
-
-		currentChamp, err := client.Riot.LoL.ChampionMastery.Get(summoner.ID, champ.Key)
-
-		if err != nil {
-			fmt.Printf("Error: %v\n", err)
-			continue
-		}
-
-		champArr = append(champArr, map[string]string{
-			"Champion": champ.ID,
-			"Points":   strconv.Itoa(currentChamp.ChampionPoints),
-		})
-	}
-
-	http.HandleFunc("/champs", func(w http.ResponseWriter, r *http.Request) {
-		champJson, err := json.Marshal(champArr)
+	http.HandleFunc("/getSumm", func(w http.ResponseWriter, r *http.Request) {
+		player := getSummoner(r.URL.Query().Get("summoner"), client)
+		champJson, err := json.Marshal(player)
 		if err != nil {
 			log.Fatal("Error marshalling", err)
 			w.WriteHeader(http.StatusNotImplemented)
@@ -62,4 +40,31 @@ func main() {
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 
+}
+
+func getSummoner(reqSummoner string, lolClient *golio.Client) []map[string]string {
+	summoner, err := lolClient.Riot.LoL.Summoner.GetByName(reqSummoner)
+	if err != nil {
+		log.Fatal("Error getting summoner: ", err)
+	}
+	fmt.Printf("%s is a level %d summoner\n", summoner.Name, summoner.SummonerLevel)
+
+	allChamps, _ := lolClient.DataDragon.GetChampions()
+
+	for _, champ := range allChamps {
+
+		currentChamp, err := lolClient.Riot.LoL.ChampionMastery.Get(summoner.ID, champ.Key)
+
+		if err != nil {
+			fmt.Printf("Error: %v\n", err)
+			continue
+		}
+
+		champArr = append(champArr, map[string]string{
+			"Champion": champ.ID,
+			"Points":   strconv.Itoa(currentChamp.ChampionPoints),
+		})
+	}
+
+	return champArr
 }
